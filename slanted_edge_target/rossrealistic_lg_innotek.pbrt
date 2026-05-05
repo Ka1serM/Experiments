@@ -1,0 +1,96 @@
+Integrator "path"
+
+Sampler "independent"
+    "integer pixelsamples" [ 512 ]
+
+Film "rgb"
+    "string filename" "rossrealistic_lg_innotek.exr"
+    "integer xresolution" [ 1928 ]
+    "integer yresolution" [ 1088 ]
+    "float diagonal" [6.641411898083118]
+
+Camera "rossrealistic"
+    "string lensfile" [ "../../lenses/lg-innotek/ADAS_NarrowViewing_w_m_names.zmx" ]
+    "string sensorFilePath" [ "../../sensors/onsemi_AR0237.json" ]
+    "string glasscatalogpaths" [ "../../glasscatalogs/schott.AGF,../../glasscatalogs/ohara.AGF" ]
+    "float aperturediameter" [ 2 ] # f/7.5
+    "float focusdistance" [ 10.09 ] #hyperfocaldistance for f/7.5
+
+WorldBegin
+AttributeBegin
+    LightSource "infinite"
+        "rgb L" [ 50 50 50 ]
+AttributeEnd
+
+AttributeBegin
+    Texture "tex" "spectrum" "imagemap"
+        "string wrap" [ "repeat" ]
+        "string filename" [ "slanted_edge_single.png" ]
+    MakeNamedMaterial "SlantedEdgeTargetMat"
+        "texture reflectance" [ "tex" ]
+        "string type" [ "diffuse" ]
+AttributeEnd
+
+Translate 0 0 10.09
+Scale 0.30 0.30 0.30
+
+AttributeBegin
+    NamedMaterial "SlantedEdgeTargetMat"
+    #Translate 0 0 1
+    #Scale 0.0305 0.0305 0.0305
+    Shape "trianglemesh"
+        "point2 uv" [ 0 1 1 1 1 0 0 0 ]
+        "normal N" [ 0 0 1 0 0 1 0 0 1 0 0 1 ]
+        "point3 P" [ -1 -1 0 1 -1 0 1 1 0 -1 1 0 ]
+        "integer indices" [ 2 1 0 3 2 0 ]
+AttributeEnd
+
+Translate 4.8 2.2 0
+
+AttributeBegin
+    NamedMaterial "SlantedEdgeTargetMat"
+    Shape "trianglemesh"
+        "point2 uv" [ 0 1 1 1 1 0 0 0 ]
+        "normal N" [ 0 0 1 0 0 1 0 0 1 0 0 1 ]
+        "point3 P" [ -1 -1 0 1 -1 0 1 1 0 -1 1 0 ]
+        "integer indices" [ 2 1 0 3 2 0 ]
+AttributeEnd
+
+Translate -9.6 0 0
+
+AttributeBegin
+    NamedMaterial "SlantedEdgeTargetMat"
+    Shape "trianglemesh"
+        "point2 uv" [ 0 1 1 1 1 0 0 0 ]
+        "normal N" [ 0 0 1 0 0 1 0 0 1 0 0 1 ]
+        "point3 P" [ -1 -1 0 1 -1 0 1 1 0 -1 1 0 ]
+        "integer indices" [ 2 1 0 3 2 0 ]
+AttributeEnd
+
+Translate 0 -4.4 0
+
+AttributeBegin
+    NamedMaterial "SlantedEdgeTargetMat"
+    Shape "trianglemesh"
+        "point2 uv" [ 0 1 1 1 1 0 0 0 ]
+        "normal N" [ 0 0 1 0 0 1 0 0 1 0 0 1 ]
+        "point3 P" [ -1 -1 0 1 -1 0 1 1 0 -1 1 0 ]
+        "integer indices" [ 2 1 0 3 2 0 ]
+AttributeEnd
+
+Translate 9.6 0 0
+
+AttributeBegin
+    NamedMaterial "SlantedEdgeTargetMat"
+    Shape "trianglemesh"
+        "point2 uv" [ 0 1 1 1 1 0 0 0 ]
+        "normal N" [ 0 0 1 0 0 1 0 0 1 0 0 1 ]
+        "point3 P" [ -1 -1 0 1 -1 0 1 1 0 -1 1 0 ]
+        "integer indices" [ 2 1 0 3 2 0 ]
+AttributeEnd
+
+
+
+
+
+

@@ -1,0 +1,48 @@
+{
+  "psfGridDimensions": {
+    "x": 68,
+    "y": 51
+  },
+  "psfs": [
+    {
+      "wavelength_microns": 0.656,
+      "discretePsfSampleCount": {
+        "x": 9,
+        "y": 9
+      },
+      "file": "./sony-icx267al-lg-innotek-aspherical-68x51-auto-r-0.656.exr",
+      "spatialExtend": {
+        "width_microns": 37.51971755498879,
+        "height_microns": 37.51971755498879
+      },
+      "apertureDiameter_mm": 2.0
+    }
+  ],
+  "imageSensor": {
+    "name": "Sony ICX267",
+    "link": "https://www.1stvision.com/cameras/sensor_specs/ICX267.pdf",
+    "resolution": {
+      "width": 1360,
+      "height": 1024
+    },
+    "dimensions": {
+      "width_mm": 6.324,
+      "height_mm": 4.7616
+    }
+  },
+  "lens": {
+    "aperture_diameter_mm": 2.0,
+    "backfocal_length_mm": 2.5999999046325684,
+    "cameraLensMetadata": {
+      "closestFocalDistance": 7.568359375,
+      "description": "",
+      "focalLength": 1.5118677616119385,
+      "isAnamorphic": false,
+      "maximumAperture": 2.7553629875183105,
+      "name": "LG Innotek Aspherical",
+      "patent": "",
+      "squeeze": 1.0,
+      "surfaceCount": 14
+    }
+  }
+}
