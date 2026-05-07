@@ -9,6 +9,16 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
+from experiments_env import EXPERIMENT_REPO_ROOT, ROSS_ROOT, reexec_in_ross_venv
+
+
+reexec_in_ross_venv()
+
+os.environ.setdefault(
+    "MPLCONFIGDIR",
+    str(Path(os.environ.get("TMPDIR", "/tmp")) / "ross-experiments-matplotlib"),
+)
+
 import matplotlib
 
 matplotlib.use("Agg")
@@ -19,15 +29,15 @@ import numpy as np
 import OpenEXR
 import pytest
 
-ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_EXPERIMENT_ROOT = (
-    Path("/home/marcel/Documents/Medieninformatik/Forschungssemester")
-    / "experiments"
-    / "pbrt_cpu_gpu_e2e"
-)
+DEFAULT_EXPERIMENT_ROOT = EXPERIMENT_REPO_ROOT / "runs" / "pbrt-cpu-gpu-e2e"
 
-PBRT = ROOT / "build" / "pbrt-v4" / "pbrt"
-SCENE = ROOT / "resources" / "scenes" / "charts" / "slanted-edge.pbrt"
+PBRT = ROSS_ROOT / "build" / "pbrt-v4" / "pbrt"
+SCENE = (
+    EXPERIMENT_REPO_ROOT
+    / "assets"
+    / "slanted-edge-target"
+    / "rossrealistic_lg_innotek.pbrt"
+)
 
 EXPERIMENT_ROOT = Path(
     os.environ.get(
@@ -62,7 +72,7 @@ def sha256(path: Path) -> str | None:
 def git(args: list[str]) -> str:
     result = subprocess.run(
         ["git", *args],
-        cwd=ROOT,
+        cwd=ROSS_ROOT,
         text=True,
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
@@ -92,7 +102,7 @@ def run_and_log(args: list[str], log_path: Path) -> None:
     with log_path.open("w", encoding="utf-8") as log:
         process = subprocess.Popen(
             args,
-            cwd=ROOT,
+            cwd=SCENE.parent,
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
             text=True,
@@ -491,3 +501,7 @@ def test_pbrt_cpu_gpu() -> None:
     assert (
         cpu_vs_gpu_rel_mse <= CPU_GPU_MAX
     ), f"CPU/GPU mismatch: {cpu_vs_gpu_rel_mse:.3e} > {CPU_GPU_MAX:.3e}"
+
+
+if __name__ == "__main__":
+    raise SystemExit(pytest.main([__file__, *sys.argv[1:]]))

@@ -7,24 +7,29 @@ import subprocess
 import tempfile
 from pathlib import Path
 
+from experiments_env import EXPERIMENT_REPO_ROOT, ROSS_ROOT, reexec_in_ross_venv
 
-REPO_ROOT = Path(__file__).resolve().parents[1]
+
+reexec_in_ross_venv()
+
 WAVELENGTHS = {"r": 0.656, "g": 0.587, "b": 0.486}
+DEFAULT_LENS = ROSS_ROOT / "resources/lenses/Daniel/LG Innotek Aspherical.zmx"
+DEFAULT_SENSOR = ROSS_ROOT / "resources/sensors/sony_ICX267AL.json"
 GLASS_CATALOGS = (
-    REPO_ROOT / "resources/glasscatalogs/schott.AGF",
-    REPO_ROOT / "resources/glasscatalogs/ohara.AGF",
+    ROSS_ROOT / "resources/glasscatalogs/schott.AGF",
+    ROSS_ROOT / "resources/glasscatalogs/ohara.AGF",
 )
-ANGLEEXPORT = REPO_ROOT / "build/executables/angleexport/angleexport"
-ANGLES2PSFMAP = REPO_ROOT / ".venv/bin/angles2psfmap"
-BIGPSF2EXR = REPO_ROOT / "build/executables/bigpsf2exr/bigpsf2exr"
+ANGLEEXPORT = ROSS_ROOT / "build/executables/angleexport/angleexport"
+ANGLES2PSFMAP = ROSS_ROOT / ".venv/bin/angles2psfmap"
+BIGPSF2EXR = ROSS_ROOT / "build/executables/bigpsf2exr/bigpsf2exr"
 
 
 def parse_args():
     parser = argparse.ArgumentParser(
         description="Generate a PSF map for a lens and sensor."
     )
-    parser.add_argument("--lens", required=True)
-    parser.add_argument("--sensor", required=True)
+    parser.add_argument("--lens", default=str(DEFAULT_LENS))
+    parser.add_argument("--sensor", default=str(DEFAULT_SENSOR))
     parser.add_argument("--support-points", "--grid-resolution", default="9x7")
     parser.add_argument("--output")
     parser.add_argument("--wavelengths", default="r")
@@ -57,7 +62,7 @@ def default_output_base(lens, sensor, support_points, wavelengths):
     lens_name = clean_label(lens)
     sensor_name = clean_label(sensor)
     name = f"{sensor_name}-{lens_name}-{support_points}-auto-{wavelengths}"
-    return REPO_ROOT / "resources/psfs" / name / name
+    return EXPERIMENT_REPO_ROOT / "outputs" / "psfs" / name / name
 
 
 def psf_paths(output_base, wavelengths, extension):

@@ -10,12 +10,11 @@ Film "rgb"
     "float diagonal" [6.641411898083118]
 
 Camera "rossrealistic"
-    "string lensfile" [ "../../lenses/lg-innotek/ADAS_NarrowViewing_w_m_names.zmx" ]
-    "string sensorFilePath" [ "../../sensors/onsemi_AR0237.json" ]
-    "string glasscatalogpaths" [ "../../glasscatalogs/schott.AGF,../../glasscatalogs/ohara.AGF" ]
+    "string lensfile" [ "../../../ROSS/resources/lenses/lg-innotek/ADAS_NarrowViewing_w_m_names.zmx" ]
+    "string sensorFilePath" [ "../../../ROSS/resources/sensors/onsemi_AR0237.json" ]
+    "string glasscatalogpaths" [ "../../../ROSS/resources/glasscatalogs/schott.AGF,../../../ROSS/resources/glasscatalogs/ohara.AGF" ]
     "float aperturediameter" [ 2 ] # f/7.5
     "float focusdistance" [ 10.09 ] #hyperfocaldistance for f/7.5
-
 WorldBegin
 AttributeBegin
     LightSource "infinite"
@@ -88,9 +87,6 @@ AttributeBegin
         "point3 P" [ -1 -1 0 1 -1 0 1 1 0 -1 1 0 ]
         "integer indices" [ 2 1 0 3 2 0 ]
 AttributeEnd
-
-
-
 
 
 
