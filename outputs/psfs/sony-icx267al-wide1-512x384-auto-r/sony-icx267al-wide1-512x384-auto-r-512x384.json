@@ -1,0 +1,48 @@
+{
+  "psfGridDimensions": {
+    "x": 512,
+    "y": 384
+  },
+  "psfs": [
+    {
+      "wavelength_microns": 0.656,
+      "discretePsfSampleCount": {
+        "x": 9,
+        "y": 9
+      },
+      "file": "./sony-icx267al-wide1-512x384-auto-r-0.656.exr",
+      "spatialExtend": {
+        "width_microns": 37.437061388403386,
+        "height_microns": 37.437061388403386
+      },
+      "apertureDiameter_mm": 2.0
+    }
+  ],
+  "imageSensor": {
+    "name": "Sony ICX267",
+    "link": "https://www.1stvision.com/cameras/sensor_specs/ICX267.pdf",
+    "resolution": {
+      "width": 1360,
+      "height": 1024
+    },
+    "dimensions": {
+      "width_mm": 6.324,
+      "height_mm": 4.7616
+    }
+  },
+  "lens": {
+    "aperture_diameter_mm": 2.0,
+    "backfocal_length_mm": 39.651615142822266,
+    "cameraLensMetadata": {
+      "closestFocalDistance": 19.287109375,
+      "description": "",
+      "focalLength": 1.854475975036621,
+      "isAnamorphic": false,
+      "maximumAperture": 1.7187246084213257,
+      "name": "100 deg Laikin wide angle lens",
+      "patent": "",
+      "squeeze": 1.0,
+      "surfaceCount": 20
+    }
+  }
+}

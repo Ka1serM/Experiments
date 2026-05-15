@@ -10,7 +10,7 @@ Film "rgb"
     "float diagonal" [6.641411898083118]
 
 Camera "rossrealistic"
-    "string lensfile" [ "../../../ROSS/resources/lenses/lg-innotek/ADAS_NarrowViewing_w_m_names.zmx" ]
+    "string lensfile" [ "../../../ROSS/resources/lenses/Daniel/Wide1.zmx" ]
     "string sensorFilePath" [ "../../../ROSS/resources/sensors/onsemi_AR0237.json" ]
     "string glasscatalogpaths" [ "../../../ROSS/resources/glasscatalogs/schott.AGF,../../../ROSS/resources/glasscatalogs/ohara.AGF" ]
     "float aperturediameter" [ 2 ] # f/7.5

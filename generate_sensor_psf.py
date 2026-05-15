@@ -13,7 +13,7 @@ from experiments_env import EXPERIMENT_REPO_ROOT, ROSS_ROOT, reexec_in_ross_venv
 reexec_in_ross_venv()
 
 WAVELENGTHS = {"r": 0.656, "g": 0.587, "b": 0.486}
-DEFAULT_LENS = ROSS_ROOT / "resources/lenses/Daniel/LG Innotek Aspherical.zmx"
+DEFAULT_LENS = ROSS_ROOT / "resources/lenses/Daniel/Wide1.zmx"
 DEFAULT_SENSOR = ROSS_ROOT / "resources/sensors/sony_ICX267AL.json"
 GLASS_CATALOGS = (
     ROSS_ROOT / "resources/glasscatalogs/schott.AGF",

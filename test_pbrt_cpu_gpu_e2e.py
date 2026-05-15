@@ -6,6 +6,8 @@ import platform
 import shutil
 import subprocess
 import sys
+import time
+from argparse import ArgumentParser, Namespace
 from datetime import datetime
 from pathlib import Path
 
@@ -29,31 +31,51 @@ import numpy as np
 import OpenEXR
 import pytest
 
-DEFAULT_EXPERIMENT_ROOT = EXPERIMENT_REPO_ROOT / "runs" / "pbrt-cpu-gpu-e2e"
-
-PBRT = ROSS_ROOT / "build" / "pbrt-v4" / "pbrt"
-SCENE = (
-    EXPERIMENT_REPO_ROOT
-    / "assets"
-    / "slanted-edge-target"
-    / "rossrealistic_lg_innotek.pbrt"
-)
-
-EXPERIMENT_ROOT = Path(
-    os.environ.get(
-        "ROSS_E2E_LOG_DIR",
-        DEFAULT_EXPERIMENT_ROOT,
-    )
-).expanduser()
-
-SEED = 1234
-SPP = 1
-
 REL_EPS = 1e-3
-DETERMINISM_MAX = 0.0
-CPU_GPU_MAX = 0.1
 
 DIFF_COLORMAP = "magma"
+
+
+DEFAULT_OUTPUT = EXPERIMENT_REPO_ROOT / "runs" / "pbrt-cpu-gpu-e2e"
+DEFAULT_PBRT = ROSS_ROOT / "build" / "pbrt-v4" / "pbrt"
+
+
+def build_arg_parser(require_experiment_args: bool) -> ArgumentParser:
+    parser = ArgumentParser(
+        description="Run a PBRT CPU/GPU end-to-end comparison.",
+        add_help=False,
+    )
+    experiment_args = parser.add_argument_group("experiment arguments")
+    experiment_args.add_argument(
+        "--scene",
+        type=Path,
+        default=os.environ.get("ROSS_E2E_SCENE"),
+        required=require_experiment_args and "ROSS_E2E_SCENE" not in os.environ,
+    )
+    experiment_args.add_argument("--pbrt", type=Path, default=DEFAULT_PBRT)
+    experiment_args.add_argument(
+        "--output",
+        type=Path,
+        default=Path(os.environ.get("ROSS_E2E_OUTPUT", DEFAULT_OUTPUT)),
+    )
+    experiment_args.add_argument("--seed", type=int, required=require_experiment_args)
+    experiment_args.add_argument("--spp", type=int, required=require_experiment_args)
+    experiment_args.add_argument(
+        "--determinism-max", type=float, required=require_experiment_args
+    )
+    experiment_args.add_argument("--cpu-gpu-max", type=float, required=require_experiment_args)
+    return parser
+
+
+def parse_args(
+    argv: list[str],
+    require_experiment_args: bool = False,
+) -> tuple[Namespace, list[str]]:
+    parser = build_arg_parser(require_experiment_args)
+    return parser.parse_known_args(argv)
+
+
+CONFIG, PYTEST_ARGS = parse_args(sys.argv[1:])
 
 
 def sha256(path: Path) -> str | None:
@@ -84,45 +106,50 @@ def git(args: list[str]) -> str:
     return result.stdout.strip()
 
 
-def make_run_dir() -> Path:
+def make_run_dir(output: Path) -> Path:
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     commit = git(["rev-parse", "--short", "HEAD"])
 
-    run_dir = EXPERIMENT_ROOT / f"{timestamp}-{commit}"
+    run_dir = output.expanduser() / f"{timestamp}-{commit}"
     run_dir.mkdir(parents=True, exist_ok=False)
 
     return run_dir
 
 
-def run_and_log(args: list[str], log_path: Path) -> None:
+def run_and_log(args: list[str], log_path: Path, cwd: Path) -> float:
     print("\n$ " + " ".join(map(str, args)), flush=True)
 
     log_path.parent.mkdir(parents=True, exist_ok=True)
 
-    with log_path.open("w", encoding="utf-8") as log:
+    started = time.perf_counter()
+
+    with log_path.open("wb") as log:
         process = subprocess.Popen(
             args,
-            cwd=SCENE.parent,
+            cwd=cwd,
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
-            text=True,
-            encoding="utf-8",
-            errors="replace",
-            bufsize=1,
+            bufsize=0,
         )
 
         assert process.stdout is not None
 
-        for line in process.stdout:
-            print(line, end="", flush=True)
-            log.write(line)
+        for chunk in iter(lambda: process.stdout.read(4096), b""):
+            sys.stdout.buffer.write(chunk)
+            sys.stdout.buffer.flush()
+            log.write(chunk)
             log.flush()
 
         returncode = process.wait()
 
+    elapsed_seconds = time.perf_counter() - started
+    print(f"\nRender wall time: {elapsed_seconds:.3f} s", flush=True)
+
     if returncode != 0:
         command = " ".join(args)
         pytest.fail(f"Command failed with exit code {returncode}: {command}")
+
+    return elapsed_seconds
 
 
 def load_exr_rgb(path: Path) -> np.ndarray:
@@ -158,7 +185,7 @@ def save_relative_mse_diff_image(
     b: np.ndarray,
     out_path: Path,
     title: str,
-) -> dict[str, float]:
+) -> float:
     per_pixel_rel_mse = relative_squared_error(a, b).mean(axis=0)
 
     mean_value = float(per_pixel_rel_mse.mean())
@@ -191,10 +218,7 @@ def save_relative_mse_diff_image(
     fig.savefig(out_path, bbox_inches="tight")
     plt.close(fig)
 
-    return {
-        "mean": mean_value,
-        "max": max_value,
-    }
+    return max_value
 
 
 def metric_status(value: float, threshold: float) -> str:
@@ -202,6 +226,60 @@ def metric_status(value: float, threshold: float) -> str:
         return "PASS"
 
     return "FAIL"
+
+
+def mean(values: list[float]) -> float:
+    return sum(values) / len(values)
+
+
+def speedup_multiplier(cpu_seconds: float, gpu_seconds: float) -> float:
+    if gpu_seconds <= 0.0:
+        return float("inf")
+
+    return cpu_seconds / gpu_seconds
+
+
+def speedup_percent(cpu_seconds: float, gpu_seconds: float) -> float:
+    return (speedup_multiplier(cpu_seconds, gpu_seconds) - 1.0) * 100.0
+
+
+def time_saved_percent(cpu_seconds: float, gpu_seconds: float) -> float:
+    if cpu_seconds <= 0.0:
+        return 0.0
+
+    return (1.0 - (gpu_seconds / cpu_seconds)) * 100.0
+
+
+def write_render_times_csv(
+    run_dir: Path,
+    gpu_a_seconds: float,
+    gpu_b_seconds: float,
+    cpu_a_seconds: float,
+    cpu_b_seconds: float,
+) -> None:
+    gpu_mean_seconds = mean([gpu_a_seconds, gpu_b_seconds])
+    cpu_mean_seconds = mean([cpu_a_seconds, cpu_b_seconds])
+
+    lines = [
+        "name,mode,seconds,speedup_multiplier,speedup_percent,time_saved_percent",
+        f"gpu_a,gpu,{gpu_a_seconds:.6f},"
+        f"{speedup_multiplier(cpu_a_seconds, gpu_a_seconds):.6f},"
+        f"{speedup_percent(cpu_a_seconds, gpu_a_seconds):.6f},"
+        f"{time_saved_percent(cpu_a_seconds, gpu_a_seconds):.6f}",
+        f"gpu_b,gpu,{gpu_b_seconds:.6f},"
+        f"{speedup_multiplier(cpu_b_seconds, gpu_b_seconds):.6f},"
+        f"{speedup_percent(cpu_b_seconds, gpu_b_seconds):.6f},"
+        f"{time_saved_percent(cpu_b_seconds, gpu_b_seconds):.6f}",
+        f"cpu_a,cpu,{cpu_a_seconds:.6f},,,",
+        f"cpu_b,cpu,{cpu_b_seconds:.6f},,,",
+        f"mean,gpu,{gpu_mean_seconds:.6f},"
+        f"{speedup_multiplier(cpu_mean_seconds, gpu_mean_seconds):.6f},"
+        f"{speedup_percent(cpu_mean_seconds, gpu_mean_seconds):.6f},"
+        f"{time_saved_percent(cpu_mean_seconds, gpu_mean_seconds):.6f}",
+        f"mean,cpu,{cpu_mean_seconds:.6f},,,",
+    ]
+
+    (run_dir / "render_times.csv").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
 def write_lab_report_template(run_dir: Path, metadata: dict[str, object]) -> None:
@@ -297,36 +375,63 @@ TODOs, Folgeexperimente oder Debugging-Ideen.
 
 def append_results_to_lab_report(
     run_dir: Path,
-    metrics: dict[str, object],
+    image_shape: list[int],
+    cpu_vs_cpu_rel_mse: float,
+    gpu_vs_gpu_rel_mse: float,
+    cpu_vs_gpu_rel_mse: float,
+    cpu_vs_cpu_diff_max: float,
+    gpu_vs_gpu_diff_max: float,
+    cpu_vs_gpu_diff_max: float,
+    determinism_max: float,
+    cpu_gpu_max: float,
+    gpu_a_seconds: float,
+    gpu_b_seconds: float,
+    cpu_a_seconds: float,
+    cpu_b_seconds: float,
 ) -> None:
     report_path = run_dir / "laborbericht.md"
     content = report_path.read_text(encoding="utf-8")
 
-    cpu_vs_cpu = float(metrics["cpu_vs_cpu_rel_mse"])
-    gpu_vs_gpu = float(metrics["gpu_vs_gpu_rel_mse"])
-    cpu_vs_gpu = float(metrics["cpu_vs_gpu_rel_mse"])
-    determinism_max = float(metrics["determinism_max"])
-    cpu_gpu_max = float(metrics["cpu_gpu_max"])
-
     all_passed = (
-        cpu_vs_cpu <= determinism_max
-        and gpu_vs_gpu <= determinism_max
-        and cpu_vs_gpu <= cpu_gpu_max
+        cpu_vs_cpu_rel_mse <= determinism_max
+        and gpu_vs_gpu_rel_mse <= determinism_max
+        and cpu_vs_gpu_rel_mse <= cpu_gpu_max
     )
+    gpu_mean_seconds = mean([gpu_a_seconds, gpu_b_seconds])
+    cpu_mean_seconds = mean([cpu_a_seconds, cpu_b_seconds])
 
     results_section = f"""## Ergebnisse
 
 | Metrik | Wert | Grenzwert | Status |
 |---|---:|---:|---|
-| CPU vs CPU rel. MSE | `{cpu_vs_cpu:.6e}` | `{determinism_max:.6e}` | {metric_status(cpu_vs_cpu, determinism_max)} |
-| GPU vs GPU rel. MSE | `{gpu_vs_gpu:.6e}` | `{determinism_max:.6e}` | {metric_status(gpu_vs_gpu, determinism_max)} |
-| CPU vs GPU rel. MSE | `{cpu_vs_gpu:.6e}` | `{cpu_gpu_max:.6e}` | {metric_status(cpu_vs_gpu, cpu_gpu_max)} |
-| CPU vs CPU max rel. pixel error | `{float(metrics["cpu_vs_cpu_diff_max"]):.6e}` | — | — |
-| GPU vs GPU max rel. pixel error | `{float(metrics["gpu_vs_gpu_diff_max"]):.6e}` | — | — |
-| CPU vs GPU max rel. pixel error | `{float(metrics["cpu_vs_gpu_diff_max"]):.6e}` | — | — |
-| Image shape | `{metrics["image_shape"]}` | — | — |
+| CPU vs CPU rel. MSE | `{cpu_vs_cpu_rel_mse:.6e}` | `{determinism_max:.6e}` | {metric_status(cpu_vs_cpu_rel_mse, determinism_max)} |
+| GPU vs GPU rel. MSE | `{gpu_vs_gpu_rel_mse:.6e}` | `{determinism_max:.6e}` | {metric_status(gpu_vs_gpu_rel_mse, determinism_max)} |
+| CPU vs GPU rel. MSE | `{cpu_vs_gpu_rel_mse:.6e}` | `{cpu_gpu_max:.6e}` | {metric_status(cpu_vs_gpu_rel_mse, cpu_gpu_max)} |
+| CPU vs CPU max rel. pixel error | `{cpu_vs_cpu_diff_max:.6e}` | — | — |
+| GPU vs GPU max rel. pixel error | `{gpu_vs_gpu_diff_max:.6e}` | — | — |
+| CPU vs GPU max rel. pixel error | `{cpu_vs_gpu_diff_max:.6e}` | — | — |
+| Image shape | `{image_shape}` | — | — |
 
 **Gesamtstatus:** {"PASS" if all_passed else "FAIL"}
+
+### Renderzeiten
+
+| Render | Modus | Sekunden |
+|---|---|---:|
+| GPU A | GPU | `{gpu_a_seconds:.3f}` |
+| GPU B | GPU | `{gpu_b_seconds:.3f}` |
+| CPU A | CPU | `{cpu_a_seconds:.3f}` |
+| CPU B | CPU | `{cpu_b_seconds:.3f}` |
+| GPU Durchschnitt | GPU | `{gpu_mean_seconds:.3f}` |
+| CPU Durchschnitt | CPU | `{cpu_mean_seconds:.3f}` |
+
+| Vergleich | Multiplikator | Prozent schneller | Zeitersparnis |
+|---|---:|---:|---:|
+| Durchschnitt CPU/GPU | `{speedup_multiplier(cpu_mean_seconds, gpu_mean_seconds):.3f}x` | `{speedup_percent(cpu_mean_seconds, gpu_mean_seconds):.1f}%` | `{time_saved_percent(cpu_mean_seconds, gpu_mean_seconds):.1f}%` |
+| A CPU/GPU | `{speedup_multiplier(cpu_a_seconds, gpu_a_seconds):.3f}x` | `{speedup_percent(cpu_a_seconds, gpu_a_seconds):.1f}%` | `{time_saved_percent(cpu_a_seconds, gpu_a_seconds):.1f}%` |
+| B CPU/GPU | `{speedup_multiplier(cpu_b_seconds, gpu_b_seconds):.3f}x` | `{speedup_percent(cpu_b_seconds, gpu_b_seconds):.1f}%` | `{time_saved_percent(cpu_b_seconds, gpu_b_seconds):.1f}%` |
+
+Die gleichen Werte stehen maschinenlesbar in `render_times.csv`.
 
 ### Relative-MSE-Diff-Bilder
 
@@ -353,16 +458,16 @@ Die Ergebnisse werden nach dem Rendern automatisch hier eingefügt.""",
     report_path.write_text(content, encoding="utf-8")
 
 
-def render_command(outfile: Path, use_gpu: bool) -> list[str]:
+def render_command(config: Namespace, outfile: Path, use_gpu: bool) -> list[str]:
     args = [
-        str(PBRT),
+        str(config.pbrt),
         "--seed",
-        str(SEED),
+        str(config.seed),
         "--spp",
-        str(SPP),
+        str(config.spp),
         "--outfile",
         str(outfile),
-        str(SCENE),
+        str(config.scene),
     ]
 
     if use_gpu:
@@ -372,7 +477,21 @@ def render_command(outfile: Path, use_gpu: bool) -> list[str]:
 
 
 def test_pbrt_cpu_gpu() -> None:
-    run_dir = make_run_dir()
+    if (
+        CONFIG.scene is None
+        or CONFIG.seed is None
+        or CONFIG.spp is None
+        or CONFIG.determinism_max is None
+        or CONFIG.cpu_gpu_max is None
+    ):
+        pytest.skip("PBRT E2E config not supplied; use a run_pbrt_cpu_gpu_*.sh preset")
+
+    config = CONFIG
+    config.scene = config.scene.expanduser()
+    config.pbrt = config.pbrt.expanduser()
+    config.output = config.output.expanduser()
+
+    run_dir = make_run_dir(config.output)
 
     outputs = run_dir / "outputs"
     logs = run_dir / "logs"
@@ -380,8 +499,8 @@ def test_pbrt_cpu_gpu() -> None:
     outputs.mkdir()
     logs.mkdir()
 
-    scene_copy_path = run_dir / SCENE.name
-    shutil.copy2(SCENE, scene_copy_path)
+    scene_copy_path = run_dir / config.scene.name
+    shutil.copy2(config.scene, scene_copy_path)
 
     gpu_a_path = outputs / "gpu_a.exr"
     gpu_b_path = outputs / "gpu_b.exr"
@@ -395,18 +514,18 @@ def test_pbrt_cpu_gpu() -> None:
     metadata: dict[str, object] = {
         "run_dir": str(run_dir.resolve()),
         "datetime": datetime.now().isoformat(timespec="seconds"),
-        "scene": str(SCENE.resolve()),
+        "scene": str(config.scene.resolve()),
         "scene_copy": str(scene_copy_path.resolve()),
-        "seed": SEED,
-        "spp": SPP,
-        "pbrt": str(PBRT.resolve()),
-        "pbrt_sha256": sha256(PBRT),
+        "seed": config.seed,
+        "spp": config.spp,
+        "pbrt": str(config.pbrt.resolve()),
+        "pbrt_sha256": sha256(config.pbrt),
         "git_commit": git(["rev-parse", "HEAD"]),
         "git_branch": git(["branch", "--show-current"]),
         "python": sys.version,
         "platform": platform.platform(),
-        "determinism_max": DETERMINISM_MAX,
-        "cpu_gpu_max": CPU_GPU_MAX,
+        "determinism_max": config.determinism_max,
+        "cpu_gpu_max": config.cpu_gpu_max,
         "diff_colormap": DIFF_COLORMAP,
     }
 
@@ -414,11 +533,35 @@ def test_pbrt_cpu_gpu() -> None:
 
     print(f"\nScene copy: {scene_copy_path.resolve()}", flush=True)
 
-    run_and_log(render_command(gpu_a_path, use_gpu=True), logs / "gpu_a.log")
-    run_and_log(render_command(gpu_b_path, use_gpu=True), logs / "gpu_b.log")
+    gpu_a_seconds = run_and_log(
+        render_command(config, gpu_a_path, use_gpu=True),
+        logs / "gpu_a.log",
+        config.scene.parent,
+    )
+    gpu_b_seconds = run_and_log(
+        render_command(config, gpu_b_path, use_gpu=True),
+        logs / "gpu_b.log",
+        config.scene.parent,
+    )
 
-    run_and_log(render_command(cpu_a_path, use_gpu=False), logs / "cpu_a.log")
-    run_and_log(render_command(cpu_b_path, use_gpu=False), logs / "cpu_b.log")
+    cpu_a_seconds = run_and_log(
+        render_command(config, cpu_a_path, use_gpu=False),
+        logs / "cpu_a.log",
+        config.scene.parent,
+    )
+    cpu_b_seconds = run_and_log(
+        render_command(config, cpu_b_path, use_gpu=False),
+        logs / "cpu_b.log",
+        config.scene.parent,
+    )
+
+    write_render_times_csv(
+        run_dir,
+        gpu_a_seconds,
+        gpu_b_seconds,
+        cpu_a_seconds,
+        cpu_b_seconds,
+    )
 
     gpu_a = load_exr_rgb(gpu_a_path)
     gpu_b = load_exr_rgb(gpu_b_path)
@@ -433,54 +576,68 @@ def test_pbrt_cpu_gpu() -> None:
     gpu_vs_gpu_rel_mse = relative_mse(gpu_a, gpu_b)
     cpu_vs_gpu_rel_mse = relative_mse(cpu_a, gpu_a)
 
-    cpu_vs_cpu_diff = save_relative_mse_diff_image(
+    cpu_vs_cpu_diff_max = save_relative_mse_diff_image(
         cpu_a,
         cpu_b,
         cpu_vs_cpu_diff_path,
         "CPU vs CPU relative MSE",
     )
 
-    gpu_vs_gpu_diff = save_relative_mse_diff_image(
+    gpu_vs_gpu_diff_max = save_relative_mse_diff_image(
         gpu_a,
         gpu_b,
         gpu_vs_gpu_diff_path,
         "GPU vs GPU relative MSE",
     )
 
-    cpu_vs_gpu_diff = save_relative_mse_diff_image(
+    cpu_vs_gpu_diff_max = save_relative_mse_diff_image(
         cpu_a,
         gpu_a,
         cpu_vs_gpu_diff_path,
         "CPU vs GPU relative MSE",
     )
 
-    metrics = {
-        "cpu_vs_cpu_rel_mse": cpu_vs_cpu_rel_mse,
-        "gpu_vs_gpu_rel_mse": gpu_vs_gpu_rel_mse,
-        "cpu_vs_gpu_rel_mse": cpu_vs_gpu_rel_mse,
-        "determinism_max": DETERMINISM_MAX,
-        "cpu_gpu_max": CPU_GPU_MAX,
-        "image_shape": list(cpu_a.shape),
-        "cpu_vs_cpu_diff_image": str(cpu_vs_cpu_diff_path.resolve()),
-        "gpu_vs_gpu_diff_image": str(gpu_vs_gpu_diff_path.resolve()),
-        "cpu_vs_gpu_diff_image": str(cpu_vs_gpu_diff_path.resolve()),
-        "cpu_vs_cpu_diff_mean": cpu_vs_cpu_diff["mean"],
-        "gpu_vs_gpu_diff_mean": gpu_vs_gpu_diff["mean"],
-        "cpu_vs_gpu_diff_mean": cpu_vs_gpu_diff["mean"],
-        "cpu_vs_cpu_diff_max": cpu_vs_cpu_diff["max"],
-        "gpu_vs_gpu_diff_max": gpu_vs_gpu_diff["max"],
-        "cpu_vs_gpu_diff_max": cpu_vs_gpu_diff["max"],
-    }
-
-    append_results_to_lab_report(run_dir, metrics)
+    append_results_to_lab_report(
+        run_dir,
+        image_shape=list(cpu_a.shape),
+        cpu_vs_cpu_rel_mse=cpu_vs_cpu_rel_mse,
+        gpu_vs_gpu_rel_mse=gpu_vs_gpu_rel_mse,
+        cpu_vs_gpu_rel_mse=cpu_vs_gpu_rel_mse,
+        cpu_vs_cpu_diff_max=cpu_vs_cpu_diff_max,
+        gpu_vs_gpu_diff_max=gpu_vs_gpu_diff_max,
+        cpu_vs_gpu_diff_max=cpu_vs_gpu_diff_max,
+        determinism_max=config.determinism_max,
+        cpu_gpu_max=config.cpu_gpu_max,
+        gpu_a_seconds=gpu_a_seconds,
+        gpu_b_seconds=gpu_b_seconds,
+        cpu_a_seconds=cpu_a_seconds,
+        cpu_b_seconds=cpu_b_seconds,
+    )
 
     print("\nMetrics:", flush=True)
     print(f"  cpu_vs_cpu_rel_mse: {cpu_vs_cpu_rel_mse}", flush=True)
     print(f"  gpu_vs_gpu_rel_mse: {gpu_vs_gpu_rel_mse}", flush=True)
     print(f"  cpu_vs_gpu_rel_mse: {cpu_vs_gpu_rel_mse}", flush=True)
-    print(f"  determinism_max: {DETERMINISM_MAX}", flush=True)
-    print(f"  cpu_gpu_max: {CPU_GPU_MAX}", flush=True)
+    print(f"  determinism_max: {config.determinism_max}", flush=True)
+    print(f"  cpu_gpu_max: {config.cpu_gpu_max}", flush=True)
     print(f"  image_shape: {list(cpu_a.shape)}", flush=True)
+
+    gpu_mean_seconds = mean([gpu_a_seconds, gpu_b_seconds])
+    cpu_mean_seconds = mean([cpu_a_seconds, cpu_b_seconds])
+
+    print("\nRender times:", flush=True)
+    print(f"  gpu_a_seconds: {gpu_a_seconds:.3f}", flush=True)
+    print(f"  gpu_b_seconds: {gpu_b_seconds:.3f}", flush=True)
+    print(f"  cpu_a_seconds: {cpu_a_seconds:.3f}", flush=True)
+    print(f"  cpu_b_seconds: {cpu_b_seconds:.3f}", flush=True)
+    print(f"  gpu_mean_seconds: {gpu_mean_seconds:.3f}", flush=True)
+    print(f"  cpu_mean_seconds: {cpu_mean_seconds:.3f}", flush=True)
+    print(
+        "  gpu_speedup: "
+        f"{speedup_multiplier(cpu_mean_seconds, gpu_mean_seconds):.3f}x "
+        f"({speedup_percent(cpu_mean_seconds, gpu_mean_seconds):.1f}% faster)",
+        flush=True,
+    )
 
     print("\nDiff images:", flush=True)
     print(f"  cpu_vs_cpu_diff_image: {cpu_vs_cpu_diff_path}", flush=True)
@@ -488,20 +645,31 @@ def test_pbrt_cpu_gpu() -> None:
     print(f"  cpu_vs_gpu_diff_image: {cpu_vs_gpu_diff_path}", flush=True)
 
     print(f"\nLaborbericht: {run_dir / 'laborbericht.md'}", flush=True)
+    print(f"Render times CSV: {run_dir / 'render_times.csv'}", flush=True)
     print(f"Scene copy: {scene_copy_path.resolve()}", flush=True)
 
     assert (
-        cpu_vs_cpu_rel_mse <= DETERMINISM_MAX
+        cpu_vs_cpu_rel_mse <= config.determinism_max
     ), f"CPU render is non-deterministic: {cpu_vs_cpu_rel_mse:.3e}"
 
     assert (
-        gpu_vs_gpu_rel_mse <= DETERMINISM_MAX
+        gpu_vs_gpu_rel_mse <= config.determinism_max
     ), f"GPU render is non-deterministic: {gpu_vs_gpu_rel_mse:.3e}"
 
     assert (
-        cpu_vs_gpu_rel_mse <= CPU_GPU_MAX
-    ), f"CPU/GPU mismatch: {cpu_vs_gpu_rel_mse:.3e} > {CPU_GPU_MAX:.3e}"
+        cpu_vs_gpu_rel_mse <= config.cpu_gpu_max
+    ), f"CPU/GPU mismatch: {cpu_vs_gpu_rel_mse:.3e} > {config.cpu_gpu_max:.3e}"
 
 
 if __name__ == "__main__":
-    raise SystemExit(pytest.main([__file__, *sys.argv[1:]]))
+    CONFIG, PYTEST_ARGS = parse_args(sys.argv[1:], require_experiment_args=True)
+    pytest_args = [__file__, *PYTEST_ARGS]
+    if not any(
+        arg == "-s"
+        or arg == "--capture=no"
+        or arg.startswith("--capture=")
+        for arg in PYTEST_ARGS
+    ):
+        pytest_args.insert(0, "-s")
+
+    raise SystemExit(pytest.main(pytest_args))
