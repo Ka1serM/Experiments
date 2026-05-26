@@ -7,6 +7,10 @@ import subprocess
 import tempfile
 from pathlib import Path
 
+import numpy as np
+import OpenEXR
+import Imath
+
 from experiments_env import EXPERIMENT_REPO_ROOT, ROSS_ROOT, reexec_in_ross_venv
 
 
@@ -26,16 +30,15 @@ BIGPSF2EXR = ROSS_ROOT / "build/executables/bigpsf2exr/bigpsf2exr"
 
 def parse_args():
     parser = argparse.ArgumentParser(
-        description="Generate a PSF map for a lens and sensor."
+        description="Generate a PSF map for a lens and sensor. "
+                    "Outputs a metadata JSON and a single multi-channel EXR "
+                    "(channel i corresponds to psfs[i])."
     )
     parser.add_argument("--lens", default=str(DEFAULT_LENS))
     parser.add_argument("--sensor", default=str(DEFAULT_SENSOR))
     parser.add_argument("--support-points", "--grid-resolution", default="9x7")
     parser.add_argument("--output")
     parser.add_argument("--wavelengths", default="r")
-    parser.add_argument(
-        "--output-format", choices=("discrete", "bigpsf", "both"), default="discrete"
-    )
     parser.add_argument("--psf-sample-count", type=int)
     parser.add_argument("--aperture-diameter-mm", type=float)
     parser.add_argument("--focus-distance-cm", type=float)
@@ -73,13 +76,6 @@ def psf_paths(output_base, wavelengths, extension):
     ]
 
 
-def rewrite_metadata(metadata_path, replacements):
-    metadata = json.loads(metadata_path.read_text())
-    for psf in metadata["psfs"]:
-        psf["file"] = replacements.get(Path(psf["file"]).name, psf["file"])
-    metadata_path.write_text(json.dumps(metadata, indent=2) + "\n")
-
-
 def main():
     args = parse_args()
     lens = Path(args.lens).expanduser().resolve()
@@ -110,74 +106,93 @@ def main():
 
         angleexport_command = [
             str(ANGLEEXPORT),
-            "--glas-catalogs",
-            catalogs,
-            "--sensor",
-            str(sensor),
-            "--lens",
-            str(lens),
-            "--output",
-            str(angles),
-            "--resolution",
-            support_points,
+            "--glas-catalogs", catalogs,
+            "--sensor", str(sensor),
+            "--lens", str(lens),
+            "--output", str(angles),
+            "--resolution", support_points,
         ]
         if args.aperture_diameter_mm is not None:
-            angleexport_command += [
-                "--apertureDiameter_mm",
-                str(args.aperture_diameter_mm),
-            ]
+            angleexport_command += ["--apertureDiameter_mm", str(args.aperture_diameter_mm)]
         if args.focus_distance_cm is not None:
             angleexport_command += ["--focusDistance_cm", str(args.focus_distance_cm)]
 
         angles2psfmap_command = [
             str(ANGLES2PSFMAP),
-            str(lens),
-            str(sensor),
-            str(angles),
+            str(lens), str(sensor), str(angles),
             output_base.name,
-            "--wavelengths",
-            wavelengths,
+            "--wavelengths", wavelengths,
         ]
         if args.wide_angle:
             angles2psfmap_command.append("--wide-angle")
         if args.axis_symmetry:
             angles2psfmap_command.append("--use-axis-symmetry")
         if args.psf_sample_count is not None:
-            angles2psfmap_command += [
-                "--use-fixed-psf-sample-count",
-                str(args.psf_sample_count),
-            ]
+            angles2psfmap_command += ["--use-fixed-psf-sample-count", str(args.psf_sample_count)]
 
-        print(f"Lens: {lens}")
+        print(f"Lens:   {lens}")
         print(f"Sensor: {sensor}")
-        print(f"Support points: {support_points}")
-        print(f"Output metadata: {metadata_path}")
+        print(f"Grid:   {support_points}")
+        print(f"Output: {metadata_path}")
+        print()
+
         run(angleexport_command, dry_run=args.dry_run)
         run(angles2psfmap_command, cwd=output_base.parent, dry_run=args.dry_run)
 
-        if args.output_format != "bigpsf":
-            replacements = {}
-            for bigpsf, exr in zip(bigpsfs, exrs):
-                command = [
-                    str(BIGPSF2EXR),
-                    str(bigpsf),
-                    str(exr),
-                    "--psf-normalize-mode",
-                    "OVER_AREA",
-                ]
-                if args.axis_symmetry:
-                    command.append("--applyAxisSymmetry")
-                run(command, dry_run=args.dry_run)
-                replacements[bigpsf.name] = f"./{exr.name}"
-            if not args.dry_run:
-                rewrite_metadata(metadata_path, replacements)
+        for bigpsf, exr in zip(bigpsfs, exrs):
+            cmd = [
+                str(BIGPSF2EXR), str(bigpsf), str(exr),
+                "--psf-normalize-mode", "OVER_AREA",
+            ]
+            if args.axis_symmetry:
+                cmd.append("--applyAxisSymmetry")
+            run(cmd, dry_run=args.dry_run)
 
-        if args.output_format == "discrete":
+        if not args.dry_run:
+            print("\nCombining into multi-channel EXR...")
+            combined_exr = output_base.parent / f"{output_base.stem}.exr"
+            channels_data = []
+            for exr in exrs:
+                f = OpenEXR.InputFile(str(exr))
+                dw = f.header()["dataWindow"]
+                w = dw.max.x - dw.min.x + 1
+                h = dw.max.y - dw.min.y + 1
+                ch_data = np.frombuffer(f.channel("R"), dtype=np.float32).reshape(h, w)
+                f.close()
+                channels_data.append(ch_data)
+
+            header = OpenEXR.Header(w, h)
+            header["channels"] = {
+                str(i): Imath.Channel(Imath.PixelType(Imath.PixelType.FLOAT))
+                for i in range(len(channels_data))
+            }
+            combined = OpenEXR.OutputFile(str(combined_exr), header)
+            combined.writePixels({
+                str(i): ch.tobytes() for i, ch in enumerate(channels_data)
+            })
+            combined.close()
+            print(f"  Wrote: {combined_exr}")
+
+            for exr in exrs:
+                exr.unlink()
+                print(f"  Removed: {exr}")
+
+            meta = json.loads(metadata_path.read_text())
+            entry_template = meta["psfs"][0]
+            meta["psfs"] = []
+            for ch in wavelengths:
+                e = dict(entry_template)
+                e["wavelength_microns"] = WAVELENGTHS[ch]
+                e["file"] = f"./{output_base.stem}.exr"
+                meta["psfs"].append(e)
+            metadata_path.write_text(json.dumps(meta, indent=2) + "\n")
+            print(f"  Updated: {metadata_path}")
+
             for bigpsf in bigpsfs:
-                if args.dry_run:
-                    print(f"Would delete {bigpsf}")
-                else:
-                    bigpsf.unlink()
+                bigpsf.unlink()
+                print(f"  Removed: {bigpsf}")
+
+    print("\nDone.")
 
 
 if __name__ == "__main__":

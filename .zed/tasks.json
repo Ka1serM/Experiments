@@ -1,0 +1,178 @@
+[
+    {
+        "label": "CMake: configure",
+        "command": "cmake_configure() { /usr/bin/cmake -S \"$ZED_WORKTREE_ROOT\" -B \"$ZED_WORKTREE_ROOT/build\" -DROSS_BUILD_GPU_SUPPORT=ON -DCMAKE_CUDA_COMPILER=/usr/local/cuda/bin/nvcc -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_CUDA_USE_RESPONSE_FILE_FOR_INCLUDES=OFF -DPBRT_OPTIX7_PATH=/home/marcel/Programs/OptixSDK -DPBRT_GPU_SHADER_MODEL=sm_89 -DCMAKE_CUDA_ARCHITECTURES=89 -DTBB_STRICT=OFF -DFETCHCONTENT_BASE_DIR=/home/marcel/.cache/ross-cmake-fetchcontent -DFETCHCONTENT_UPDATES_DISCONNECTED=ON; }; cmake_configure",
+        "cwd": "$ZED_WORKTREE_ROOT",
+        "shell": {
+            "with_arguments": {
+                "program": "/usr/bin/bash",
+                "args": ["--login"]
+            }
+        },
+        "use_new_terminal": false,
+        "allow_concurrent_runs": false,
+        "reveal": "always",
+        "hide": "never",
+        "save": "all"
+    },
+    {
+        "label": "Build: pbrt",
+        "command": "cmake_configure() { /usr/bin/cmake -S \"$ZED_WORKTREE_ROOT\" -B \"$ZED_WORKTREE_ROOT/build\" -DROSS_BUILD_GPU_SUPPORT=ON -DCMAKE_CUDA_COMPILER=/usr/local/cuda/bin/nvcc -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_CUDA_USE_RESPONSE_FILE_FOR_INCLUDES=OFF -DPBRT_OPTIX7_PATH=/home/marcel/Programs/OptixSDK -DPBRT_GPU_SHADER_MODEL=sm_89 -DCMAKE_CUDA_ARCHITECTURES=89 -DTBB_STRICT=OFF -DFETCHCONTENT_BASE_DIR=/home/marcel/.cache/ross-cmake-fetchcontent -DFETCHCONTENT_UPDATES_DISCONNECTED=ON; }; cmake_configure && /usr/bin/cmake --build \"$ZED_WORKTREE_ROOT/build\" --target pbrt_exe -j \"$(/usr/bin/nproc)\"",
+        "cwd": "$ZED_WORKTREE_ROOT",
+        "shell": {
+            "with_arguments": {
+                "program": "/usr/bin/bash",
+                "args": ["--login"]
+            }
+        },
+        "use_new_terminal": false,
+        "allow_concurrent_runs": false,
+        "reveal": "always",
+        "hide": "never",
+        "save": "all"
+    },
+    {
+        "label": "Build: angleexport",
+        "command": "cmake_configure() { /usr/bin/cmake -S \"$ZED_WORKTREE_ROOT\" -B \"$ZED_WORKTREE_ROOT/build\" -DROSS_BUILD_GPU_SUPPORT=ON -DCMAKE_CUDA_COMPILER=/usr/local/cuda/bin/nvcc -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_CUDA_USE_RESPONSE_FILE_FOR_INCLUDES=OFF -DPBRT_OPTIX7_PATH=/home/marcel/Programs/OptixSDK -DPBRT_GPU_SHADER_MODEL=sm_89 -DCMAKE_CUDA_ARCHITECTURES=89 -DTBB_STRICT=OFF -DFETCHCONTENT_BASE_DIR=/home/marcel/.cache/ross-cmake-fetchcontent -DFETCHCONTENT_UPDATES_DISCONNECTED=ON; }; cmake_configure && /usr/bin/cmake --build \"$ZED_WORKTREE_ROOT/build\" --target angleexport -j \"$(/usr/bin/nproc)\"",
+        "cwd": "$ZED_WORKTREE_ROOT",
+        "shell": {
+            "with_arguments": {
+                "program": "/usr/bin/bash",
+                "args": ["--login"]
+            }
+        },
+        "use_new_terminal": false,
+        "allow_concurrent_runs": false,
+        "reveal": "always",
+        "hide": "never",
+        "save": "all"
+    },
+    {
+        "label": "Build: bigpsf2exr",
+        "command": "cmake_configure() { /usr/bin/cmake -S \"$ZED_WORKTREE_ROOT\" -B \"$ZED_WORKTREE_ROOT/build\" -DROSS_BUILD_GPU_SUPPORT=ON -DCMAKE_CUDA_COMPILER=/usr/local/cuda/bin/nvcc -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_CUDA_USE_RESPONSE_FILE_FOR_INCLUDES=OFF -DPBRT_OPTIX7_PATH=/home/marcel/Programs/OptixSDK -DPBRT_GPU_SHADER_MODEL=sm_89 -DCMAKE_CUDA_ARCHITECTURES=89 -DTBB_STRICT=OFF -DFETCHCONTENT_BASE_DIR=/home/marcel/.cache/ross-cmake-fetchcontent -DFETCHCONTENT_UPDATES_DISCONNECTED=ON; }; cmake_configure && /usr/bin/cmake --build \"$ZED_WORKTREE_ROOT/build\" --target bigpsf2exr -j \"$(/usr/bin/nproc)\"",
+        "cwd": "$ZED_WORKTREE_ROOT",
+        "shell": {
+            "with_arguments": {
+                "program": "/usr/bin/bash",
+                "args": ["--login"]
+            }
+        },
+        "use_new_terminal": false,
+        "allow_concurrent_runs": false,
+        "reveal": "always",
+        "hide": "never",
+        "save": "all"
+    },
+    {
+        "label": "Build: libross",
+        "command": "cmake_configure() { /usr/bin/cmake -S \"$ZED_WORKTREE_ROOT\" -B \"$ZED_WORKTREE_ROOT/build\" -DROSS_BUILD_GPU_SUPPORT=ON -DCMAKE_CUDA_COMPILER=/usr/local/cuda/bin/nvcc -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_CUDA_USE_RESPONSE_FILE_FOR_INCLUDES=OFF -DPBRT_OPTIX7_PATH=/home/marcel/Programs/OptixSDK -DPBRT_GPU_SHADER_MODEL=sm_89 -DCMAKE_CUDA_ARCHITECTURES=89 -DTBB_STRICT=OFF -DFETCHCONTENT_BASE_DIR=/home/marcel/.cache/ross-cmake-fetchcontent -DFETCHCONTENT_UPDATES_DISCONNECTED=ON; }; cmake_configure && /usr/bin/cmake --build \"$ZED_WORKTREE_ROOT/build\" --target libross -j \"$(/usr/bin/nproc)\"",
+        "cwd": "$ZED_WORKTREE_ROOT",
+        "shell": {
+            "with_arguments": {
+                "program": "/usr/bin/bash",
+                "args": ["--login"]
+            }
+        },
+        "use_new_terminal": false,
+        "allow_concurrent_runs": false,
+        "reveal": "always",
+        "hide": "never",
+        "save": "all"
+    },
+    {
+        "label": "Build: libross tests",
+        "command": "cmake_configure() { /usr/bin/cmake -S \"$ZED_WORKTREE_ROOT\" -B \"$ZED_WORKTREE_ROOT/build\" -DROSS_BUILD_GPU_SUPPORT=ON -DCMAKE_CUDA_COMPILER=/usr/local/cuda/bin/nvcc -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_CUDA_USE_RESPONSE_FILE_FOR_INCLUDES=OFF -DPBRT_OPTIX7_PATH=/home/marcel/Programs/OptixSDK -DPBRT_GPU_SHADER_MODEL=sm_89 -DCMAKE_CUDA_ARCHITECTURES=89 -DTBB_STRICT=OFF -DFETCHCONTENT_BASE_DIR=/home/marcel/.cache/ross-cmake-fetchcontent -DFETCHCONTENT_UPDATES_DISCONNECTED=ON; }; cmake_configure && /usr/bin/cmake --build \"$ZED_WORKTREE_ROOT/build\" --target libross_unittests -j \"$(/usr/bin/nproc)\"",
+        "cwd": "$ZED_WORKTREE_ROOT",
+        "shell": {
+            "with_arguments": {
+                "program": "/usr/bin/bash",
+                "args": ["--login"]
+            }
+        },
+        "use_new_terminal": false,
+        "allow_concurrent_runs": false,
+        "reveal": "always",
+        "hide": "never",
+        "save": "all"
+    },
+    {
+        "label": "Test: libross",
+        "command": "cmake_configure() { /usr/bin/cmake -S \"$ZED_WORKTREE_ROOT\" -B \"$ZED_WORKTREE_ROOT/build\" -DROSS_BUILD_GPU_SUPPORT=ON -DCMAKE_CUDA_COMPILER=/usr/local/cuda/bin/nvcc -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_CUDA_USE_RESPONSE_FILE_FOR_INCLUDES=OFF -DPBRT_OPTIX7_PATH=/home/marcel/Programs/OptixSDK -DPBRT_GPU_SHADER_MODEL=sm_89 -DCMAKE_CUDA_ARCHITECTURES=89 -DTBB_STRICT=OFF -DFETCHCONTENT_BASE_DIR=/home/marcel/.cache/ross-cmake-fetchcontent -DFETCHCONTENT_UPDATES_DISCONNECTED=ON; }; cmake_configure && /usr/bin/cmake --build \"$ZED_WORKTREE_ROOT/build\" --target libross_unittests -j \"$(/usr/bin/nproc)\" && \"$ZED_WORKTREE_ROOT/build/libross/tests/libross_unittests\" \"[gpu][smoke]\" -s --verbosity high --durations yes",
+        "cwd": "$ZED_WORKTREE_ROOT",
+        "shell": {
+            "with_arguments": {
+                "program": "/usr/bin/bash",
+                "args": ["--login"]
+            }
+        },
+        "use_new_terminal": false,
+        "allow_concurrent_runs": false,
+        "reveal": "always",
+        "hide": "never",
+        "save": "all"
+    },
+    {
+        "label": "Test: e2e interpolatedpsf (low: 16x16)",
+        "command": "/home/marcel/GitRepositories/Experiments/run_pbrt_cpu_gpu_interpolatedpsf_low.sh",
+        "cwd": "/home/marcel/GitRepositories/Experiments",
+        "shell": {
+            "with_arguments": {
+                "program": "/usr/bin/bash",
+                "args": ["--login"]
+            }
+        },
+        "use_new_terminal": false,
+        "allow_concurrent_runs": false,
+        "reveal": "always",
+        "hide": "never",
+        "save": "all"
+    },
+    {
+        "label": "Test: e2e interpolatedpsf (medium: 64x64)",
+        "command": "/home/marcel/GitRepositories/Experiments/run_pbrt_cpu_gpu_interpolatedpsf_medium.sh",
+        "cwd": "/home/marcel/GitRepositories/Experiments",
+        "shell": {
+            "with_arguments": {
+                "program": "/usr/bin/bash",
+                "args": ["--login"]
+            }
+        },
+        "use_new_terminal": false,
+        "allow_concurrent_runs": false,
+        "reveal": "always",
+        "hide": "never",
+        "save": "all"
+    },
+    {
+        "label": "Test: e2e interpolatedpsf (high: 128x128)",
+        "command": "/home/marcel/GitRepositories/Experiments/run_pbrt_cpu_gpu_interpolatedpsf_high.sh",
+        "cwd": "/home/marcel/GitRepositories/Experiments",
+        "shell": {
+            "with_arguments": {
+                "program": "/usr/bin/bash",
+                "args": ["--login"]
+            }
+        },
+        "use_new_terminal": false,
+        "allow_concurrent_runs": false,
+        "reveal": "always",
+        "hide": "never",
+        "save": "all"
+    },
+    {
+        "label": "Clean: build",
+        "command": "rm -rf \"$ZED_WORKTREE_ROOT/build\"",
+        "cwd": "$ZED_WORKTREE_ROOT",
+        "shell": {
+            "with_arguments": {
+                "program": "/usr/bin/bash",
+                "args": ["--login"]
+            }
+        },
+        "use_new_terminal": false,
+        "allow_concurrent_runs": false,
+        "reveal": "always",
+        "hide": "never",
+        "save": "all"
+    }
+]
