@@ -11,8 +11,8 @@ The scripts automatically find `../ROSS` and re-run themselves inside `../ROSS/.
 - `generate_sensor_psf_512x384.sh` - Generate the 512x384 PSF map preset.
 - `test_pbrt_quick_cpu_gpu_render.py` - Quick PBRT CPU/GPU render with PNG previews.
 - `test_pbrt_cpu_gpu_e2e.py` - Run the PBRT CPU/GPU end-to-end comparison.
-- `assets/slanted-edge-target/` - Scene and texture used by the PBRT E2E experiment.
-- `outputs/psfs/` - Saved PSF outputs.
+- `assets/scenes/slanted-edge-target/` - Scene and texture used by the PBRT E2E experiment.
+- `assets/psfs/` - Saved PSF outputs.
 - `runs/` - New timestamped experiment runs.
 
 ## Quick Commands

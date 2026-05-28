@@ -12,7 +12,7 @@ script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 ross_root="${ROSS_ROOT:-"$(cd -- "$script_dir/../ROSS" && pwd)"}"
 
 "$ross_root/.venv/bin/python" "$script_dir/test_pbrt_cpu_gpu_e2e.py" \
-  --scene "$script_dir/assets/slanted-edge-target/rosspsf_lg_innotek.pbrt" \
+  --scene "$script_dir/assets/scenes/slanted-edge-target/rosspsf_lg_innotek.pbrt" \
   --pbrt "$ross_root/build/pbrt-v4/pbrt" \
   --output "$script_dir/runs/pbrt-cpu-gpu-e2e" \
   --seed 1234 \

@@ -1,0 +1,88 @@
+pbrt version 4 (built May 15 2026 at 13:56:15)
+Copyright (c)1998-2021 Matt Pharr, Wenzel Jakob, and Greg Humphreys.
+The source code to pbrt (but *not* the book contents) is covered by the Apache 2.0 License.
+See the file LICENSE.txt for the conditions of the license.
+[1m[31mWarning[0m: /home/marcel/GitRepositories/Experiments/assets/slanted-edge-target/rossrealistic_lg_innotek.pbrt:6:0: Output filename supplied on command line, "/home/marcel/GitRepositories/Experiments/runs/pbrt-cpu-gpu-e2e/2026-05-18_09-37-17-901342d/outputs/cpu_a.exr" will override filename provided in scene description file, "rossrealistic_lg_innotek.exr".
+[2026-05-18 09:37:47.718] [info] Reading camera lens from /home/marcel/GitRepositories/Experiments/assets/slanted-edge-target/../../../ROSS/resources/lenses/Daniel/Wide1.zmx
+[2026-05-18 09:37:47.846] [info] Resolved glass "N-SK4" to "N-SK4" from catalog "SCHOTT December 2024 preferred, inquiry, AR glasses (revC)"
+[2026-05-18 09:37:47.846] [info] Resolved glass "SF1" to "SF1" from catalog "SCHOTT December 2024 preferred, inquiry, AR glasses (revC)"
+[2026-05-18 09:37:47.846] [info] Resolved glass "N-SK4" to "N-SK4" from catalog "SCHOTT December 2024 preferred, inquiry, AR glasses (revC)"
+[2026-05-18 09:37:47.846] [info] Resolved glass "SF1" to "SF1" from catalog "SCHOTT December 2024 preferred, inquiry, AR glasses (revC)"
+[2026-05-18 09:37:47.846] [info] Resolved glass "N-SK4" to "N-SK4" from catalog "SCHOTT December 2024 preferred, inquiry, AR glasses (revC)"
+[2026-05-18 09:37:47.846] [info] Resolved glass "N-SK4" to "N-SK4" from catalog "SCHOTT December 2024 preferred, inquiry, AR glasses (revC)"
+[2026-05-18 09:37:47.846] [info] Resolved glass "N-SK4" to "N-SK4" from catalog "SCHOTT December 2024 preferred, inquiry, AR glasses (revC)"
+[2026-05-18 09:37:47.846] [info] Resolved glass "SF1" to "SF1" from catalog "SCHOTT December 2024 preferred, inquiry, AR glasses (revC)"
+[2026-05-18 09:37:47.846] [info] Resolved glass "SF1" to "SF1" from catalog "SCHOTT December 2024 preferred, inquiry, AR glasses (revC)"
+[2026-05-18 09:37:47.846] [info] Resolved glass "N-SK4" to "N-SK4" from catalog "SCHOTT December 2024 preferred, inquiry, AR glasses (revC)"
+[2026-05-18 09:37:47.846] [info] Resolved glass "N-SK4" to "N-SK4" from catalog "SCHOTT December 2024 preferred, inquiry, AR glasses (revC)"
+[2026-05-18 09:37:47.846] [info] Reading image sensor from /home/marcel/GitRepositories/Experiments/assets/slanted-edge-target/../../../ROSS/resources/sensors/onsemi_AR0237.json
+[2026-05-18 09:37:47.846] [info] Focussing at 10.09m 
+[2026-05-18 09:37:47.846] [info] focal length 18.54476mm
+[2026-05-18 09:37:47.846] [info] back focal length 3.972028cm
+[2026-05-18 09:37:47.846] [info] Computing exit pupil..
+[2026-05-18 09:37:49.436] [info] Computing exit pupil done by 1%, elapsed time: 00h 00m 01s, remaining time: 00h 01m 39s, estimated total time: 00h 01m 40s
+[2026-05-18 09:37:49.451] [info] Computing exit pupil done by 3%, elapsed time: 00h 00m 01s, remaining time: 00h 00m 32s, estimated total time: 00h 00m 33s
+[2026-05-18 09:37:49.487] [info] Computing exit pupil done by 4%, elapsed time: 00h 00m 01s, remaining time: 00h 00m 24s, estimated total time: 00h 00m 25s
+[2026-05-18 09:37:49.495] [info] Computing exit pupil done by 6%, elapsed time: 00h 00m 01s, remaining time: 00h 00m 15s, estimated total time: 00h 00m 16s
+[2026-05-18 09:37:49.548] [info] Computing exit pupil done by 7%, elapsed time: 00h 00m 01s, remaining time: 00h 00m 13s, estimated total time: 00h 00m 14s
+[2026-05-18 09:37:49.634] [info] Computing exit pupil done by 9%, elapsed time: 00h 00m 01s, remaining time: 00h 00m 10s, estimated total time: 00h 00m 11s
+[2026-05-18 09:37:49.798] [info] Computing exit pupil done by 10%, elapsed time: 00h 00m 01s, remaining time: 00h 00m 09s, estimated total time: 00h 00m 10s
+[2026-05-18 09:37:49.929] [info] Computing exit pupil done by 12%, elapsed time: 00h 00m 02s, remaining time: 00h 00m 14s, estimated total time: 00h 00m 16s
+[2026-05-18 09:37:50.947] [info] Computing exit pupil done by 14%, elapsed time: 00h 00m 03s, remaining time: 00h 00m 18s, estimated total time: 00h 00m 21s
+[2026-05-18 09:37:51.155] [info] Computing exit pupil done by 15%, elapsed time: 00h 00m 03s, remaining time: 00h 00m 17s, estimated total time: 00h 00m 20s
+[2026-05-18 09:37:51.160] [info] Computing exit pupil done by 17%, elapsed time: 00h 00m 03s, remaining time: 00h 00m 14s, estimated total time: 00h 00m 17s
+[2026-05-18 09:37:51.182] [info] Computing exit pupil done by 18%, elapsed time: 00h 00m 03s, remaining time: 00h 00m 13s, estimated total time: 00h 00m 16s
+[2026-05-18 09:37:51.267] [info] Computing exit pupil done by 20%, elapsed time: 00h 00m 03s, remaining time: 00h 00m 12s, estimated total time: 00h 00m 15s
+[2026-05-18 09:37:51.309] [info] Computing exit pupil done by 21%, elapsed time: 00h 00m 03s, remaining time: 00h 00m 11s, estimated total time: 00h 00m 14s
+[2026-05-18 09:37:51.438] [info] Computing exit pupil done by 23%, elapsed time: 00h 00m 03s, remaining time: 00h 00m 10s, estimated total time: 00h 00m 13s
+[2026-05-18 09:37:51.570] [info] Computing exit pupil done by 25%, elapsed time: 00h 00m 03s, remaining time: 00h 00m 09s, estimated total time: 00h 00m 12s
+[2026-05-18 09:37:52.817] [info] Computing exit pupil done by 26%, elapsed time: 00h 00m 04s, remaining time: 00h 00m 11s, estimated total time: 00h 00m 15s
+[2026-05-18 09:37:52.829] [info] Computing exit pupil done by 28%, elapsed time: 00h 00m 04s, remaining time: 00h 00m 10s, estimated total time: 00h 00m 14s
+[2026-05-18 09:37:52.864] [info] Computing exit pupil done by 29%, elapsed time: 00h 00m 05s, remaining time: 00h 00m 12s, estimated total time: 00h 00m 17s
+[2026-05-18 09:37:52.907] [info] Computing exit pupil done by 31%, elapsed time: 00h 00m 05s, remaining time: 00h 00m 11s, estimated total time: 00h 00m 16s
+[2026-05-18 09:37:52.957] [info] Computing exit pupil done by 32%, elapsed time: 00h 00m 05s, remaining time: 00h 00m 10s, estimated total time: 00h 00m 15s
+[2026-05-18 09:37:53.084] [info] Computing exit pupil done by 34%, elapsed time: 00h 00m 05s, remaining time: 00h 00m 09s, estimated total time: 00h 00m 14s
+[2026-05-18 09:37:53.333] [info] Computing exit pupil done by 35%, elapsed time: 00h 00m 05s, remaining time: 00h 00m 09s, estimated total time: 00h 00m 14s
+[2026-05-18 09:37:53.502] [info] Computing exit pupil done by 37%, elapsed time: 00h 00m 05s, remaining time: 00h 00m 08s, estimated total time: 00h 00m 13s
+[2026-05-18 09:37:54.466] [info] Computing exit pupil done by 39%, elapsed time: 00h 00m 06s, remaining time: 00h 00m 09s, estimated total time: 00h 00m 15s
+[2026-05-18 09:37:54.511] [info] Computing exit pupil done by 40%, elapsed time: 00h 00m 06s, remaining time: 00h 00m 09s, estimated total time: 00h 00m 15s
+[2026-05-18 09:37:54.529] [info] Computing exit pupil done by 42%, elapsed time: 00h 00m 06s, remaining time: 00h 00m 08s, estimated total time: 00h 00m 14s
+[2026-05-18 09:37:54.635] [info] Computing exit pupil done by 43%, elapsed time: 00h 00m 06s, remaining time: 00h 00m 07s, estimated total time: 00h 00m 13s
+[2026-05-18 09:37:54.640] [info] Computing exit pupil done by 45%, elapsed time: 00h 00m 06s, remaining time: 00h 00m 07s, estimated total time: 00h 00m 13s
+[2026-05-18 09:37:54.679] [info] Computing exit pupil done by 46%, elapsed time: 00h 00m 06s, remaining time: 00h 00m 07s, estimated total time: 00h 00m 13s
+[2026-05-18 09:37:55.111] [info] Computing exit pupil done by 48%, elapsed time: 00h 00m 07s, remaining time: 00h 00m 07s, estimated total time: 00h 00m 14s
+[2026-05-18 09:37:55.442] [info] Computing exit pupil done by 50%, elapsed time: 00h 00m 07s, remaining time: 00h 00m 07s, estimated total time: 00h 00m 14s
+[2026-05-18 09:37:56.259] [info] Computing exit pupil done by 51%, elapsed time: 00h 00m 08s, remaining time: 00h 00m 07s, estimated total time: 00h 00m 15s
+[2026-05-18 09:37:56.326] [info] Computing exit pupil done by 53%, elapsed time: 00h 00m 08s, remaining time: 00h 00m 07s, estimated total time: 00h 00m 15s
+[2026-05-18 09:37:56.330] [info] Computing exit pupil done by 54%, elapsed time: 00h 00m 08s, remaining time: 00h 00m 06s, estimated total time: 00h 00m 14s
+[2026-05-18 09:37:56.368] [info] Computing exit pupil done by 56%, elapsed time: 00h 00m 08s, remaining time: 00h 00m 06s, estimated total time: 00h 00m 14s
+[2026-05-18 09:37:56.457] [info] Computing exit pupil done by 57%, elapsed time: 00h 00m 08s, remaining time: 00h 00m 06s, estimated total time: 00h 00m 14s
+[2026-05-18 09:37:56.798] [info] Computing exit pupil done by 59%, elapsed time: 00h 00m 08s, remaining time: 00h 00m 05s, estimated total time: 00h 00m 13s
+[2026-05-18 09:37:56.817] [info] Computing exit pupil done by 60%, elapsed time: 00h 00m 08s, remaining time: 00h 00m 05s, estimated total time: 00h 00m 13s
+[2026-05-18 09:37:57.143] [info] Computing exit pupil done by 62%, elapsed time: 00h 00m 09s, remaining time: 00h 00m 05s, estimated total time: 00h 00m 14s
+[2026-05-18 09:37:57.933] [info] Computing exit pupil done by 64%, elapsed time: 00h 00m 10s, remaining time: 00h 00m 05s, estimated total time: 00h 00m 15s
+[2026-05-18 09:37:57.990] [info] Computing exit pupil done by 65%, elapsed time: 00h 00m 10s, remaining time: 00h 00m 05s, estimated total time: 00h 00m 15s
+[2026-05-18 09:37:58.014] [info] Computing exit pupil done by 67%, elapsed time: 00h 00m 10s, remaining time: 00h 00m 04s, estimated total time: 00h 00m 14s
+[2026-05-18 09:37:58.136] [info] Computing exit pupil done by 68%, elapsed time: 00h 00m 10s, remaining time: 00h 00m 04s, estimated total time: 00h 00m 14s
+[2026-05-18 09:37:58.455] [info] Computing exit pupil done by 70%, elapsed time: 00h 00m 10s, remaining time: 00h 00m 04s, estimated total time: 00h 00m 14s
+[2026-05-18 09:37:58.489] [info] Computing exit pupil done by 71%, elapsed time: 00h 00m 10s, remaining time: 00h 00m 04s, estimated total time: 00h 00m 14s
+[2026-05-18 09:37:58.705] [info] Computing exit pupil done by 73%, elapsed time: 00h 00m 10s, remaining time: 00h 00m 03s, estimated total time: 00h 00m 13s
+[2026-05-18 09:37:59.102] [info] Computing exit pupil done by 75%, elapsed time: 00h 00m 11s, remaining time: 00h 00m 03s, estimated total time: 00h 00m 14s
+[2026-05-18 09:37:59.664] [info] Computing exit pupil done by 76%, elapsed time: 00h 00m 11s, remaining time: 00h 00m 03s, estimated total time: 00h 00m 14s
+[2026-05-18 09:37:59.735] [info] Computing exit pupil done by 78%, elapsed time: 00h 00m 11s, remaining time: 00h 00m 03s, estimated total time: 00h 00m 14s
+[2026-05-18 09:37:59.771] [info] Computing exit pupil done by 79%, elapsed time: 00h 00m 11s, remaining time: 00h 00m 02s, estimated total time: 00h 00m 13s
+[2026-05-18 09:37:59.908] [info] Computing exit pupil done by 81%, elapsed time: 00h 00m 12s, remaining time: 00h 00m 02s, estimated total time: 00h 00m 14s
+[2026-05-18 09:38:00.068] [info] Computing exit pupil done by 82%, elapsed time: 00h 00m 12s, remaining time: 00h 00m 02s, estimated total time: 00h 00m 14s
+[2026-05-18 09:38:00.136] [info] Computing exit pupil done by 84%, elapsed time: 00h 00m 12s, remaining time: 00h 00m 02s, estimated total time: 00h 00m 14s
+[2026-05-18 09:38:00.336] [info] Computing exit pupil done by 85%, elapsed time: 00h 00m 12s, remaining time: 00h 00m 02s, estimated total time: 00h 00m 14s
+[2026-05-18 09:38:00.784] [info] Computing exit pupil done by 87%, elapsed time: 00h 00m 12s, remaining time: 00h 00m 01s, estimated total time: 00h 00m 13s
+[2026-05-18 09:38:01.282] [info] Computing exit pupil done by 89%, elapsed time: 00h 00m 13s, remaining time: 00h 00m 01s, estimated total time: 00h 00m 14s
+[2026-05-18 09:38:01.497] [info] Computing exit pupil done by 90%, elapsed time: 00h 00m 13s, remaining time: 00h 00m 01s, estimated total time: 00h 00m 14s
+[2026-05-18 09:38:01.522] [info] Computing exit pupil done by 92%, elapsed time: 00h 00m 13s, remaining time: 00h 00m 01s, estimated total time: 00h 00m 14s
+[2026-05-18 09:38:01.627] [info] Computing exit pupil done by 93%, elapsed time: 00h 00m 13s, remaining time: 00h 00m 00s, estimated total time: 00h 00m 13s
+[2026-05-18 09:38:01.700] [info] Computing exit pupil done by 95%, elapsed time: 00h 00m 13s, remaining time: 00h 00m 00s, estimated total time: 00h 00m 13s
+[2026-05-18 09:38:01.875] [info] Computing exit pupil done by 96%, elapsed time: 00h 00m 14s, remaining time: 00h 00m 00s, estimated total time: 00h 00m 14s
+[2026-05-18 09:38:01.915] [info] Computing exit pupil done by 98%, elapsed time: 00h 00m 14s, remaining time: 00h 00m 00s, estimated total time: 00h 00m 14s
+[2026-05-18 09:38:02.474] [info] Computing exit pupil done by 100%, elapsed time: 00h 00m 14s, remaining time: 00h 00m 00s, estimated total time: 00h 00m 14s
+[2026-05-18 09:38:02.474] [info] Computing exit pupil took 00h 00m 14s.
+Rendering: [                                           ] Rendering: [                                           ]  (0.3s|24.0s)  Rendering: [+                                          ]  (0.5s|23.3s)  Rendering: [+                                          ]  (0.8s|23.0s)  Rendering: [++                                         ]  (1.0s|22.8s)  Rendering: [++                                         ]  (1.3s|22.5s)  Rendering: [+++                                        ]  (1.5s|22.3s)  Rendering: [+++                                        ]  (1.8s|22.1s)  Rendering: [++++                                       ]  (2.0s|21.8s)  Rendering: [++++                                       ]  (2.3s|21.6s)  Rendering: [+++++                                      ]  (2.5s|21.3s)  Rendering: [+++++                                      ]  (3.0s|20.8s)  Rendering: [++++++                                     ]  (3.5s|20.3s)  Rendering: [+++++++                                    ]  (4.0s|19.9s)  Rendering: [++++++++                                   ]  (4.5s|19.6s)  Rendering: [+++++++++                                  ]  (5.0s|19.2s)  Rendering: [++++++++++                                 ]  (5.5s|18.6s)  Rendering: [+++++++++++                                ]  (6.0s|18.1s)  Rendering: [++++++++++++                               ]  (6.5s|17.6s)  Rendering: [+++++++++++++                              ]  (7.0s|17.1s)  Rendering: [+++++++++++++                              ]  (7.5s|16.6s)  Rendering: [++++++++++++++                             ]  (8.0s|16.2s)  Rendering: [+++++++++++++++                            ]  (8.5s|15.6s)  Rendering: [++++++++++++++++                           ]  (9.0s|15.1s)  Rendering: [+++++++++++++++++                          ]  (9.5s|14.6s)  Rendering: [++++++++++++++++++                         ]  (10.0s|14.1s)  Rendering: [+++++++++++++++++++                        ]  (10.5s|13.5s)  Rendering: [++++++++++++++++++++                       ]  (11.0s|13.0s)  Rendering: [+++++++++++++++++++++                      ]  (11.5s|12.5s)  Rendering: [+++++++++++++++++++++                      ]  (12.0s|12.0s)  Rendering: [++++++++++++++++++++++                     ]  (12.5s|11.6s)  Rendering: [+++++++++++++++++++++++                    ]  (13.0s|11.1s)  Rendering: [++++++++++++++++++++++++                   ]  (13.5s|10.7s)  Rendering: [+++++++++++++++++++++++++                  ]  (14.0s|10.2s)  Rendering: [++++++++++++++++++++++++++                 ]  (14.5s|9.7s)  Rendering: [+++++++++++++++++++++++++++                ]  (15.0s|9.2s)  Rendering: [++++++++++++++++++++++++++++               ]  (15.5s|8.7s)  Rendering: [++++++++++++++++++++++++++++               ]  (16.0s|8.2s)  Rendering: [+++++++++++++++++++++++++++++              ]  (16.5s|7.7s)  Rendering: [++++++++++++++++++++++++++++++             ]  (17.0s|7.2s)  Rendering: [+++++++++++++++++++++++++++++++            ]  (17.5s|6.7s)  Rendering: [++++++++++++++++++++++++++++++++           ]  (18.0s|6.2s)  Rendering: [+++++++++++++++++++++++++++++++++          ]  (18.5s|5.7s)  Rendering: [++++++++++++++++++++++++++++++++++         ]  (19.0s|5.2s)  Rendering: [+++++++++++++++++++++++++++++++++++        ]  (19.5s|4.7s)  Rendering: [++++++++++++++++++++++++++++++++++++       ]  (20.0s|4.2s)  Rendering: [++++++++++++++++++++++++++++++++++++       ]  (20.5s|3.7s)  Rendering: [+++++++++++++++++++++++++++++++++++++      ]  (21.0s|3.2s)  Rendering: [++++++++++++++++++++++++++++++++++++++     ]  (21.5s|2.7s)  Rendering: [+++++++++++++++++++++++++++++++++++++++    ]  (22.0s|2.2s)  Rendering: [++++++++++++++++++++++++++++++++++++++++   ]  (22.5s|1.7s)  Rendering: [+++++++++++++++++++++++++++++++++++++++++  ]  (23.0s|1.2s)  Rendering: [++++++++++++++++++++++++++++++++++++++++++ ]  (23.5s|0.7s)  Rendering: [+++++++++++++++++++++++++++++++++++++++++++]  (24.0s|0.2s)  Rendering: [+++++++++++++++++++++++++++++++++++++++++++]  (24.2s)       Rendering: [+++++++++++++++++++++++++++++++++++++++++++]  (24.2s)       

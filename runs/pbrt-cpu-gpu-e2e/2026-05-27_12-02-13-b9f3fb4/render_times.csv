@@ -1,0 +1,7 @@
+name,mode,seconds,speedup_multiplier,speedup_percent,time_saved_percent
+gpu_a,gpu,1.629912,16.423249,1542.324883,93.911071
+gpu_b,gpu,1.424137,17.951757,1695.175742,94.429515
+cpu_a,cpu,26.768454,,,
+cpu_b,cpu,25.565758,,,
+mean,gpu,1.527024,17.136009,1613.600927,94.164336
+mean,cpu,26.167106,,,

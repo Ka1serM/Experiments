@@ -24,7 +24,7 @@ echo "=== Step 1: Generate interpolated PSF data ==="
 echo ""
 echo "=== Step 2: Run end-to-end test ==="
 "$ross_root/.venv/bin/python" "$script_dir/test_pbrt_cpu_gpu_e2e.py" \
-  --scene "$script_dir/assets/slanted-edge-target/rossinterpolatedpsf_wide1.pbrt" \
+  --scene "$script_dir/assets/scenes/slanted-edge-target/rossinterpolatedpsf_wide1.pbrt" \
   --pbrt "$ross_root/build/pbrt-v4/pbrt" \
   --output "$script_dir/runs/pbrt-cpu-gpu-e2e" \
   --seed 1234 \

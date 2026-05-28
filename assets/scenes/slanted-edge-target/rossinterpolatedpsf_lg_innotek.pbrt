@@ -1,0 +1,87 @@
+Integrator "path"
+
+Sampler "independent"
+    "integer pixelsamples" [ 512 ]
+
+Film "rossinterpolatedpsfrgb"
+    "string filename" "rosspsf_lg_innotek.exr"
+    "integer xresolution" [ 1360 ]
+    "integer yresolution" [ 1024 ]
+    "float diagonal" [7.914493]
+    "string psfgrid" [ "../../psfs/sony-icx267al-wide1-512x384-auto-r/sony-icx267al-wide1-512x384-auto-r-512x384.json" ]
+
+Camera "perspective"
+    "float fov" [ 18.7 ]
+WorldBegin
+AttributeBegin
+    LightSource "infinite"
+        "rgb L" [ 1 1 1 ]
+AttributeEnd
+
+AttributeBegin
+    Texture "tex" "spectrum" "imagemap"
+        "string wrap" [ "repeat" ]
+        "string filename" [ "slanted_edge_single.png" ]
+    MakeNamedMaterial "SlantedEdgeTargetMat"
+        "texture reflectance" [ "tex" ]
+        "string type" [ "diffuse" ]
+AttributeEnd
+
+Translate 0 0 10.09
+Scale 0.30 0.30 0.30
+
+AttributeBegin
+    NamedMaterial "SlantedEdgeTargetMat"
+    #Translate 0 0 1
+    #Scale 0.0305 0.0305 0.0305
+    Shape "trianglemesh"
+        "point2 uv" [ 0 1 1 1 1 0 0 0 ]
+        "normal N" [ 0 0 1 0 0 1 0 0 1 0 0 1 ]
+        "point3 P" [ -1 -1 0 1 -1 0 1 1 0 -1 1 0 ]
+        "integer indices" [ 2 1 0 3 2 0 ]
+AttributeEnd
+
+Translate 4.8 2.2 0
+
+AttributeBegin
+    NamedMaterial "SlantedEdgeTargetMat"
+    Shape "trianglemesh"
+        "point2 uv" [ 0 1 1 1 1 0 0 0 ]
+        "normal N" [ 0 0 1 0 0 1 0 0 1 0 0 1 ]
+        "point3 P" [ -1 -1 0 1 -1 0 1 1 0 -1 1 0 ]
+        "integer indices" [ 2 1 0 3 2 0 ]
+AttributeEnd
+
+Translate -9.6 0 0
+
+AttributeBegin
+    NamedMaterial "SlantedEdgeTargetMat"
+    Shape "trianglemesh"
+        "point2 uv" [ 0 1 1 1 1 0 0 0 ]
+        "normal N" [ 0 0 1 0 0 1 0 0 1 0 0 1 ]
+        "point3 P" [ -1 -1 0 1 -1 0 1 1 0 -1 1 0 ]
+        "integer indices" [ 2 1 0 3 2 0 ]
+AttributeEnd
+
+Translate 0 -4.4 0
+
+AttributeBegin
+    NamedMaterial "SlantedEdgeTargetMat"
+    Shape "trianglemesh"
+        "point2 uv" [ 0 1 1 1 1 0 0 0 ]
+        "normal N" [ 0 0 1 0 0 1 0 0 1 0 0 1 ]
+        "point3 P" [ -1 -1 0 1 -1 0 1 1 0 -1 1 0 ]
+        "integer indices" [ 2 1 0 3 2 0 ]
+AttributeEnd
+
+Translate 9.6 0 0
+
+AttributeBegin
+    NamedMaterial "SlantedEdgeTargetMat"
+    Shape "trianglemesh"
+        "point2 uv" [ 0 1 1 1 1 0 0 0 ]
+        "normal N" [ 0 0 1 0 0 1 0 0 1 0 0 1 ]
+        "point3 P" [ -1 -1 0 1 -1 0 1 1 0 -1 1 0 ]
+        "integer indices" [ 2 1 0 3 2 0 ]
+AttributeEnd
+

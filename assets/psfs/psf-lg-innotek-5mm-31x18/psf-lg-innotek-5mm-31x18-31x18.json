@@ -1,0 +1,74 @@
+{
+  "psfGridDimensions": {
+    "x": 31,
+    "y": 18
+  },
+  "psfs": [
+    {
+      "wavelength_microns": 0.486,
+      "discretePsfSampleCount": {
+        "x": 35,
+        "y": 35
+      },
+      "file": "./psf-lg-innotek-5mm-31x18-0.656-merged.exr",
+      "spatialExtend": {
+        "width_microns": 75.98283092272898,
+        "height_microns": 75.98283092272898
+      },
+      "apertureDiameter_mm": 5.0
+    },
+    {
+      "wavelength_microns": 0.587,
+      "discretePsfSampleCount": {
+        "x": 35,
+        "y": 35
+      },
+      "file": "./psf-lg-innotek-5mm-31x18-0.656-merged.exr",
+      "spatialExtend": {
+        "width_microns": 91.77350154658829,
+        "height_microns": 91.77350154658829
+      },
+      "apertureDiameter_mm": 5.0
+    },
+    {
+      "wavelength_microns": 0.656,
+      "discretePsfSampleCount": {
+        "x": 35,
+        "y": 35
+      },
+      "file": "./psf-lg-innotek-5mm-31x18-0.656-merged.exr",
+      "spatialExtend": {
+        "width_microns": 102.56118741833379,
+        "height_microns": 102.56118741833379
+      },
+      "apertureDiameter_mm": 5.0
+    }
+  ],
+  "imageSensor": {
+    "name": "onsemi AR0237",
+    "link": "https://www.onsemi.com/products/sensors/image-sensors/AR0237",
+    "resolution": {
+      "width": 1928,
+      "height": 1088
+    },
+    "dimensions": {
+      "width_mm": 5.784,
+      "height_mm": 3.264
+    }
+  },
+  "lens": {
+    "aperture_diameter_mm": 5.0,
+    "backfocal_length_mm": 2.5999999046325684,
+    "cameraLensMetadata": {
+      "closestFocalDistance": 7.568359375,
+      "description": "",
+      "focalLength": 1.5118677616119385,
+      "isAnamorphic": false,
+      "maximumAperture": 2.7553629875183105,
+      "name": "LG Innotek Automotive Lens, Patent No. WO2023163511A1",
+      "patent": "",
+      "squeeze": 1.0,
+      "surfaceCount": 14
+    }
+  }
+}

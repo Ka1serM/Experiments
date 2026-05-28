@@ -13,7 +13,7 @@ export LD_LIBRARY_PATH="/usr/local/cuda/lib64${LD_LIBRARY_PATH:+:$LD_LIBRARY_PAT
 script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 ross_root="${ROSS_ROOT:-"$(cd -- "$script_dir/../ROSS" && pwd)"}"
 
-psf_json="$script_dir/outputs/psfs/onsemi-ar0237-wide1-64x36-auto-rgb/onsemi-ar0237-wide1-64x36-auto-rgb-64x36.json"
+psf_json="$script_dir/assets/psfs/onsemi-ar0237-wide1-64x36-auto-rgb/onsemi-ar0237-wide1-64x36-auto-rgb-64x36.json"
 
 if [[ -f "$psf_json" ]]; then
   echo "=== PSF already exists, skipping generation: $psf_json ==="
@@ -32,7 +32,7 @@ fi
 echo ""
 echo "=== Step 2: Run end-to-end test ==="
 "$ross_root/.venv/bin/python" "$script_dir/test_pbrt_cpu_gpu_e2e.py" \
-  --scene "$script_dir/assets/slanted-edge-target/rossinterpolatedpsf_high.pbrt" \
+  --scene "$script_dir/assets/scenes/slanted-edge-target/rossinterpolatedpsf_high.pbrt" \
   --pbrt "$ross_root/build/pbrt-v4/pbrt" \
   --output "$script_dir/runs/pbrt-cpu-gpu-e2e" \
   --seed 1234 \

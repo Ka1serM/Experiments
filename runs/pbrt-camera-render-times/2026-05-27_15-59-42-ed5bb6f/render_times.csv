@@ -1,0 +1,13 @@
+scene,scene_file,spp,device,seconds,output,log
+perspective,/home/marcel/GitRepositories/Experiments/assets/scenes/slanted-edge-target/perspective.pbrt,1,cpu,0.40301586099667475,outputs/perspective_1spp_cpu.exr,logs/perspective_1spp_cpu.log
+perspective,/home/marcel/GitRepositories/Experiments/assets/scenes/slanted-edge-target/perspective.pbrt,1,gpu,1.1774977539971587,outputs/perspective_1spp_gpu.exr,logs/perspective_1spp_gpu.log
+interpolatedpsf,/home/marcel/GitRepositories/Experiments/assets/scenes/slanted-edge-target/rossinterpolatedpsf_lg_innotek_31x18.pbrt,1,cpu,10.436714797993773,outputs/interpolatedpsf_1spp_cpu.exr,logs/interpolatedpsf_1spp_cpu.log
+interpolatedpsf,/home/marcel/GitRepositories/Experiments/assets/scenes/slanted-edge-target/rossinterpolatedpsf_lg_innotek_31x18.pbrt,1,gpu,0.8662871589986025,outputs/interpolatedpsf_1spp_gpu.exr,logs/interpolatedpsf_1spp_gpu.log
+raytracing,/home/marcel/GitRepositories/Experiments/assets/scenes/slanted-edge-target/rossrealistic_lg_innotek.pbrt,1,cpu,15.679132385994308,outputs/raytracing_1spp_cpu.exr,logs/raytracing_1spp_cpu.log
+raytracing,/home/marcel/GitRepositories/Experiments/assets/scenes/slanted-edge-target/rossrealistic_lg_innotek.pbrt,1,gpu,15.865949457001989,outputs/raytracing_1spp_gpu.exr,logs/raytracing_1spp_gpu.log
+perspective,/home/marcel/GitRepositories/Experiments/assets/scenes/slanted-edge-target/perspective.pbrt,32,cpu,6.220896473998437,outputs/perspective_32spp_cpu.exr,logs/perspective_32spp_cpu.log
+perspective,/home/marcel/GitRepositories/Experiments/assets/scenes/slanted-edge-target/perspective.pbrt,32,gpu,1.1452428139964468,outputs/perspective_32spp_gpu.exr,logs/perspective_32spp_gpu.log
+interpolatedpsf,/home/marcel/GitRepositories/Experiments/assets/scenes/slanted-edge-target/rossinterpolatedpsf_lg_innotek_31x18.pbrt,32,cpu,285.29712501299946,outputs/interpolatedpsf_32spp_cpu.exr,logs/interpolatedpsf_32spp_cpu.log
+interpolatedpsf,/home/marcel/GitRepositories/Experiments/assets/scenes/slanted-edge-target/rossinterpolatedpsf_lg_innotek_31x18.pbrt,32,gpu,6.60223522400338,outputs/interpolatedpsf_32spp_gpu.exr,logs/interpolatedpsf_32spp_gpu.log
+raytracing,/home/marcel/GitRepositories/Experiments/assets/scenes/slanted-edge-target/rossrealistic_lg_innotek.pbrt,32,cpu,46.96194415399805,outputs/raytracing_32spp_cpu.exr,logs/raytracing_32spp_cpu.log
+raytracing,/home/marcel/GitRepositories/Experiments/assets/scenes/slanted-edge-target/rossrealistic_lg_innotek.pbrt,32,gpu,17.847544695003307,outputs/raytracing_32spp_gpu.exr,logs/raytracing_32spp_gpu.log
